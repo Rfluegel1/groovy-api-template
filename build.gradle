@@ -1,4 +1,5 @@
 plugins {
+    id 'org.springframework.boot' version '3.2.5'
     id 'groovy'
 }
 
@@ -11,6 +12,8 @@ repositories {
 
 dependencies {
     implementation 'org.apache.groovy:groovy:4.0.14'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.4.5'
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
