@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class Controller {
 
-    @GetMapping('/')
-    String hello() {
-        return 'Hello world!'
+    @GetMapping('/heartbeat')
+    Map heartbeat() {
+        return [version: '0.0.0']
     }
 }
