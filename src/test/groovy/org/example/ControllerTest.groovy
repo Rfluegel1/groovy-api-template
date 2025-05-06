@@ -1,13 +1,23 @@
 package org.example
 
+import groovy.json.JsonSlurper
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import spock.lang.Specification
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+
 class ControllerTest extends Specification {
-    def 'heartbeat returns static version'() {
+
+    MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new Controller()).build()
+
+    def "should return heartbeat version"() {
         when:
-        def result = new Controller().heartbeat()
+        MvcResult result = mockMvc.perform(get("/heartbeat")).andReturn()
 
         then:
-        result.version == '0.0.0'
+        def json = new JsonSlurper().parseText(result.response.contentAsString)
+        json.version == '0.0.0'
     }
 }
