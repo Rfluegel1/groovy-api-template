@@ -20,16 +20,22 @@ class Controller {
 
     @GetMapping('/health-check')
     Map healthCheck() {
+        def result = 'success'
         try {
             restTemplate.getForEntity('http://127.0.0.1:8090/', String)
-        } catch(HttpClientErrorException e) {
+        } catch (HttpClientErrorException e) {
+            if (e.statusCode != HttpStatus.NOT_FOUND) {
+                result = 'failure'
+            }
         }
         return [
-                result      : 'success',
-                integrations: [[
-                                       name  : 'pocketbase',
-                                       result: 'success'
-                               ]]
+                result      : result,
+                integrations: [
+                        [
+                                name  : 'pocketbase',
+                                result: result
+                        ]
+                ]
         ]
     }
 }
