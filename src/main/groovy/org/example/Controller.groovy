@@ -24,9 +24,11 @@ class Controller {
         try {
             restTemplate.getForEntity('http://127.0.0.1:8090/', String)
         } catch (HttpClientErrorException e) {
-            if (e.statusCode != HttpStatus.NOT_FOUND) {
+            if (e?.statusCode != HttpStatus.NOT_FOUND) {
                 result = 'failure'
             }
+        } catch (Exception ignored) {
+            result = 'failure'
         }
         return [
                 result      : result,

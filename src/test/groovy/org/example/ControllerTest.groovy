@@ -51,4 +51,16 @@ class ControllerTest extends Specification {
         json.result == 'failure'
         json.integrations.find({it.name == 'pocketbase'}).result == 'failure'
     }
+
+    def 'failure pocketbase integration returns connection exception'() {
+        when:
+        MvcResult result = mockMvc.perform(get("/health-check")).andReturn()
+
+        then:
+        1 * controller.restTemplate.getForEntity('http://127.0.0.1:8090/', String)
+                >> {throw new ConnectException() }
+        def json = new JsonSlurper().parseText(result.response.contentAsString)
+        json.result == 'failure'
+        json.integrations.find({it.name == 'pocketbase'}).result == 'failure'
+    }
 }
