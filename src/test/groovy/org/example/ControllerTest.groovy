@@ -20,4 +20,14 @@ class ControllerTest extends Specification {
         def json = new JsonSlurper().parseText(result.response.contentAsString)
         json.version == '0.0.0'
     }
+
+    def 'should return healthcheck to pocketbase'() {
+        when:
+        MvcResult result = mockMvc.perform(get("/health-check")).andReturn()
+
+        then:
+        def json = new JsonSlurper().parseText(result.response.contentAsString)
+        json.result == 'success'
+        json.integrations.find({it.name == 'pocketbase'}).result == 'success'
+    }
 }

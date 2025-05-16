@@ -10,4 +10,15 @@ class Controller {
     Map heartbeat() {
         return [version: '0.0.0']
     }
+
+    @GetMapping('/health-check')
+    Map healthCheck() {
+        return [
+                result      : 'success',
+                integrations: [[
+                                       name  : 'pocketbase',
+                                       result: 'success'
+                               ]]
+        ]
+    }
 }
