@@ -28,39 +28,21 @@ class ControllerTest extends Specification {
         json.version == '0.0.0'
     }
 
-    def 'successful pocketbase integration returns 404'() {
+    def 'pocketbase integration health check is result: #expectedResult for exception: #exception'() {
         when:
         MvcResult result = mockMvc.perform(get("/health-check")).andReturn()
 
         then:
         1 * controller.restTemplate.getForEntity('http://127.0.0.1:8090/', String)
-                >> {throw new HttpClientErrorException.NotFound(null, null, null, null) }
+                >> { throw exception }
         def json = new JsonSlurper().parseText(result.response.contentAsString)
-        json.result == 'success'
-        json.integrations.find({it.name == 'pocketbase'}).result == 'success'
-    }
+        json.result == expectedResult
+        json.integrations.find({ it.name == 'pocketbase' }).result == expectedResult
 
-    def 'failure pocketbase integration returns non 404'() {
-        when:
-        MvcResult result = mockMvc.perform(get("/health-check")).andReturn()
-
-        then:
-        1 * controller.restTemplate.getForEntity('http://127.0.0.1:8090/', String)
-                >> {throw new HttpClientErrorException.BadRequest(null, null, null, null) }
-        def json = new JsonSlurper().parseText(result.response.contentAsString)
-        json.result == 'failure'
-        json.integrations.find({it.name == 'pocketbase'}).result == 'failure'
-    }
-
-    def 'failure pocketbase integration returns connection exception'() {
-        when:
-        MvcResult result = mockMvc.perform(get("/health-check")).andReturn()
-
-        then:
-        1 * controller.restTemplate.getForEntity('http://127.0.0.1:8090/', String)
-                >> {throw new ConnectException() }
-        def json = new JsonSlurper().parseText(result.response.contentAsString)
-        json.result == 'failure'
-        json.integrations.find({it.name == 'pocketbase'}).result == 'failure'
+        where:
+        expectedResult | exception
+        'success'      | new HttpClientErrorException.NotFound(null, null, null, null)
+        'failure'      | new HttpClientErrorException.BadRequest(null, null, null, null)
+        'failure'      | new ConnectException()
     }
 }
