@@ -26,8 +26,23 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
+      - name: Start PocketBase
+        run: |
+          docker run -d --name pocketbase -p 8090:8090 ghcr.io/pocketbase/pocketbase
+
+      - name: Wait for PocketBase to be ready
+        run: |
+          for i in {1..10}; do
+            if curl -s http://localhost:8090/api/collections > /dev/null; then
+              echo "PocketBase is ready"
+              break
+            fi
+            echo "Waiting for PocketBase..."
+            sleep 2
+          done
+
       - name: Build with Gradle
-        run: ./gradlew clean build -Denvironment=ci
+        run: ./gradlew clean build
 
       - name: Set git identity
         run: |
