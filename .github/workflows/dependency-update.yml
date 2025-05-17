@@ -54,7 +54,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          ./gradlew clean build
+          ./gradlew clean build -Denvironment=ci
 
       - name: Commit and Push Changes
         run: |
