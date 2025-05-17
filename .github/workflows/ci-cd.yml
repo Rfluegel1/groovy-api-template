@@ -32,7 +32,7 @@ jobs:
       - name: Download and Unzip PocketBase
         run: |
           curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip
-          unzip pocketbase.zip
+          unzip -o -q pocketbase.zip
           chmod +x pocketbase
 
       - name: Start PocketBase
