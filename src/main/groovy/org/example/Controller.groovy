@@ -1,6 +1,7 @@
 package org.example
 
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -13,6 +14,9 @@ class Controller {
     @Autowired
     RestTemplate restTemplate
 
+    @Value('${pocketbase-base-url}')
+    String pocketbaseUrl
+
     @GetMapping('/heartbeat')
     Map heartbeat() {
         return [version: '0.0.0']
@@ -22,7 +26,7 @@ class Controller {
     Map healthCheck() {
         def result = 'success'
         try {
-            restTemplate.getForEntity('http://127.0.0.1:8090/', String)
+            restTemplate.getForEntity(pocketbaseUrl, String)
         } catch (HttpClientErrorException e) {
             if (e?.statusCode != HttpStatus.NOT_FOUND) {
                 result = 'failure'

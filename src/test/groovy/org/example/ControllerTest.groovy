@@ -17,6 +17,7 @@ class ControllerTest extends Specification {
 
     def setup() {
         controller.restTemplate = Mock(RestTemplate)
+        controller.pocketbaseUrl = 'http://127.0.0.1:8090/'
     }
 
     def "should return heartbeat version"() {
