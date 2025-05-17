@@ -24,7 +24,7 @@ jobs:
         run: ./gradlew useLatestVersions
 
       - name: Build and Test
-        run: ./gradlew clean build
+        run: ./gradlew clean build -Denvironment=ci
 
       - name: Commit and Push Changes (if any)
         id: git_status
