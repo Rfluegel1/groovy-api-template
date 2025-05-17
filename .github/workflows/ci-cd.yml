@@ -69,4 +69,4 @@ jobs:
           flyctl deploy -a $APP_NAME
 
       - name: Test Staging
-        run: ./gradlew clean build -Denvironment=staging
+        run: ./gradlew clean build -Denvironment=staging --tests '*FT'
