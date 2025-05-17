@@ -26,11 +26,17 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
+      - name: Download PocketBase
+        run: |
+          curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/latest/download/pocketbase-linux-amd64.zip
+          unzip pocketbase.zip
+          chmod +x pocketbase
+
       - name: Start PocketBase
         run: |
-          docker run -d --name pocketbase -p 8090:8090 ghcr.io/pocketbase/pocketbase
+          ./pocketbase serve &
 
-      - name: Wait for PocketBase to be ready
+      - name: Wait for PocketBase
         run: |
           for i in {1..10}; do
             if curl -s http://localhost:8090/api/collections > /dev/null; then
