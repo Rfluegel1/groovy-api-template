@@ -26,9 +26,12 @@ jobs:
           distribution: 'zulu'
           java-version: '21'
 
-      - name: Download PocketBase
+      - name: Set PocketBase Version
+        run: echo "PB_VERSION=0.21.2" >> $GITHUB_ENV
+
+      - name: Download and Unzip PocketBase
         run: |
-          curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/latest/download/pocketbase-linux-amd64.zip
+          curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip
           unzip pocketbase.zip
           chmod +x pocketbase
 
