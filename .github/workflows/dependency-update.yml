@@ -21,20 +21,23 @@ jobs:
           java-version: '21'
 
       - name: Update Dependencies
-        id: update_deps
         run: ./gradlew useLatestVersions
 
-      - name: Check for Changes
+      - name: Commit and Push Changes (if any)
         id: git_status
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git checkout -b dependency-update || git checkout dependency-update
           git add .
           if git diff --cached --quiet; then
             echo "No changes detected."
             echo "changes_detected=false" >> $GITHUB_OUTPUT
           else
             echo "Changes detected."
+            git commit -m "chore: update dependencies to latest stable versions"
+            git push origin dependency-update --force
             echo "changes_detected=true" >> $GITHUB_OUTPUT
           fi
 
@@ -43,8 +46,10 @@ jobs:
     needs: update-dependencies
     if: needs.update-dependencies.outputs.changes_detected == 'true'
     steps:
-      - name: Checkout Code
+      - name: Checkout Dependency Branch
         uses: actions/checkout@v4
+        with:
+          ref: dependency-update
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -53,20 +58,20 @@ jobs:
           java-version: '21'
 
       - name: Run Tests
-        run: |
-          ./gradlew clean build -Denvironment=ci
-
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Update dependencies to latest stable versions"
-          git push origin HEAD:dependency-update
+        run: ./gradlew clean build -Denvironment=ci
 
       - name: Merge to Main
+        id: merge_step
         run: |
+          set -e
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           git fetch origin main
           git checkout main
-          git merge --ff-only dependency-update
+          git merge --ff-only origin/dependency-update
           git push origin main
+
+      - name: Delete dependency-update branch (if merge succeeded)
+        if: success() && steps.merge_step.outcome == 'success'
+        run: git push origin --delete dependency-update
