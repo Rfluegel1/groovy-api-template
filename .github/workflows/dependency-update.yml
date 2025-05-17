@@ -23,29 +23,10 @@ jobs:
       - name: Update Dependencies
         run: ./gradlew useLatestVersions
 
-      - name: Set PocketBase Version
-        run: echo "PB_VERSION=0.21.2" >> $GITHUB_ENV
-
-      - name: Download and Unzip PocketBase
-        run: |
-          curl -L -o pocketbase.zip https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip
-          unzip pocketbase.zip
-          chmod +x pocketbase
-
       - name: Start PocketBase
-        run: |
-          ./pocketbase serve &
-
-      - name: Wait for PocketBase
-        run: |
-          for i in {1..10}; do
-            if curl -s http://localhost:8090/api/collections > /dev/null; then
-              echo "PocketBase is ready"
-              break
-            fi
-            echo "Waiting for PocketBase..."
-            sleep 2
-          done
+        uses: ./.github/actions/pocketbase
+        with:
+          version: '0.21.2'
 
       - name: Build and Test
         run: ./gradlew clean build
