@@ -2,7 +2,7 @@ name: Dependency Update
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 6 * * *'  # Daily at 6:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -11,14 +11,21 @@ jobs:
     outputs:
       changes_detected: ${{ steps.git_status.outputs.changes_detected }}
     steps:
-      - name: Checkout Code
+      - name: Checkout Main
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '21'
+
+      - name: Prepare Branch
+        run: |
+          git fetch origin
+          git checkout -B dependency-update origin/main
 
       - name: Update Dependencies
         run: ./gradlew useLatestVersions
@@ -28,14 +35,12 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          git checkout -b dependency-update || git checkout dependency-update
+
           git add .
           if git diff --cached --quiet; then
             echo "No changes detected."
             echo "changes_detected=false" >> $GITHUB_OUTPUT
           else
-            echo "Changes detected."
             git commit -m "chore: update dependencies to latest stable versions"
             git push origin dependency-update --force
             echo "changes_detected=true" >> $GITHUB_OUTPUT
@@ -46,7 +51,7 @@ jobs:
     needs: update-dependencies
     if: needs.update-dependencies.outputs.changes_detected == 'true'
     steps:
-      - name: Checkout Dependency Branch
+      - name: Checkout dependency-update branch
         uses: actions/checkout@v4
         with:
           ref: dependency-update
