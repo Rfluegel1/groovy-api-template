@@ -33,3 +33,6 @@ bin/
 .DS_Store
 
 lib/
+pocketbase
+pb_data/
+pocketbase.zip
