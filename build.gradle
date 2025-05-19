@@ -41,3 +41,9 @@ test {
     useJUnitPlatform()
     systemProperties System.getProperties()
 }
+
+tasks.register('loadTest', Exec) {
+    group = 'verification'
+    description = 'Runs k6 load test on heartbeat API.'
+    commandLine 'k6', 'run', 'src/performance/heartbeatLoadTest.js'
+}
