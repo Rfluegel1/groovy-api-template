@@ -13,7 +13,7 @@ export const options = {
 const STAGING = __ENV.STAGING === 'true';
 
 const BASE_URL = STAGING
-    ? 'https://universal-pocketbase-api.fly.dev/'
+    ? 'https://groovy-api-template.fly.dev'
     : 'http://localhost:8080';
 
 export default function () {

@@ -42,8 +42,60 @@ test {
     systemProperties System.getProperties()
 }
 
-tasks.register('loadTest', Exec) {
+tasks.register('loadTest') {
     group = 'verification'
-    description = 'Runs k6 load test on heartbeat API.'
-    commandLine 'k6', 'run', 'src/performance/heartbeatLoadTest.js'
+    description = 'Starts app (unless in staging), runs k6 test, then stops app.'
+
+    doLast {
+        if (System.getProperty('environment') == 'staging') {
+            println "Environment is 'staging' — skipping app startup."
+            def env = new HashMap<>(System.getenv())
+            env.put('STAGING', 'true')
+
+            def pb = new ProcessBuilder('k6', 'run', '--log-output=stdout', 'src/performance/heartbeatLoadTest.js')
+            pb.environment().putAll(env)
+
+            def k6 = pb.start()
+            k6.inputStream.eachLine { println it }
+            k6.waitFor()
+            return
+        }
+
+        def appProcess = ['./gradlew', 'bootRun'].execute()
+        println 'Starting app...'
+
+        def started = false
+        def retries = 30
+        def heartbeatUrl = 'http://localhost:8080/heartbeat'
+
+        for (int i = 0; i < retries; i++) {
+            try {
+                def conn = new URL(heartbeatUrl).openConnection()
+                conn.setConnectTimeout(1000)
+                conn.setReadTimeout(1000)
+                if (conn.responseCode == 200) {
+                    println "App is up!"
+                    started = true
+                    break
+                }
+            } catch (Exception ignored) {}
+            println "Waiting for app... (${i + 1}/${retries})"
+            sleep(1000)
+        }
+
+        if (!started) {
+            println "App failed to start in time. Aborting test."
+            appProcess.destroy()
+            throw new GradleException("App did not respond on /heartbeat")
+        }
+
+        try {
+            def k6 = ['k6', 'run', 'src/performance/heartbeatLoadTest.js'].execute()
+            k6.in.eachLine { println it }
+            k6.waitFor()
+        } finally {
+            println "Stopping app..."
+            appProcess.destroy()
+        }
+    }
 }
