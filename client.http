@@ -1,0 +1,7 @@
+### Heartbeat
+GET {{baseUrl}}/heartbeat
+Accept: application/json
+
+### Health Check
+GET {{baseUrl}}/health-check
+Accept: application/json
