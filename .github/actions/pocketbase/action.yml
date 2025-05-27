@@ -33,9 +33,6 @@ runs:
           sleep 2
         done
 
-    - name: Create initial admin user
+    - name: Create PocketBase admin (superuser)
       shell: bash
-      run: |
-        curl -X POST http://localhost:8090/api/admins/records \
-          -H "Content-Type: application/json" \
-          -d '{"email": "groovy-api-template@fake.com", "password": "testPassword@"}'
+      run: ./pocketbase superuser create groovy-api-template@fake.com testPassword@
