@@ -31,6 +31,7 @@ class Controller {
     @GetMapping('/health-check')
     Map healthCheck() {
         def result = 'failure'
+        def message = ''
         try {
             def headers = new HttpHeaders()
             headers.setContentType(MediaType.APPLICATION_JSON)
@@ -54,13 +55,15 @@ class Controller {
             }
         } catch (Exception ignored) {
             println(ignored)
+            message = ignored.message
         }
         return [
                 result      : result,
                 integrations: [
                         [
                                 name  : 'pocketbase',
-                                result: result
+                                result: result,
+                                message: message
                         ]
                 ]
         ]

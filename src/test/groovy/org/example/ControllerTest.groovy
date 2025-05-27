@@ -41,10 +41,11 @@ class ControllerTest extends Specification {
         def json = new JsonSlurper().parseText(result.response.contentAsString)
         json.result == expectedResult
         json.integrations.find({ it.name == 'pocketbase' }).result == expectedResult
+        json.integrations.find({ it.name == 'pocketbase' }).message == 'error message'
 
         where:
         expectedResult | exception
-        'failure'      | new ConnectException()
+        'failure'      | new ConnectException('error message')
     }
 
     def 'pocketbase integration health check is success when authenticated'() {
@@ -60,5 +61,6 @@ class ControllerTest extends Specification {
         def json = new JsonSlurper().parseText(result.response.contentAsString)
         json.result == 'success'
         json.integrations.find({ it.name == 'pocketbase' }).result == 'success'
+        json.integrations.find({ it.name == 'pocketbase' }).message == ''
     }
 }
