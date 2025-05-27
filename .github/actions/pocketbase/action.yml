@@ -33,15 +33,9 @@ runs:
           sleep 2
         done
 
-    - name: Create initial PocketBase user
+    - name: Create initial admin user
       shell: bash
       run: |
-        curl -X POST http://localhost:8090/api/collections/users/records \
+        curl -X POST http://localhost:8090/api/admins/records \
           -H "Content-Type: application/json" \
-          -d '{
-                "email": "groovy-api-template@fake.com",
-                "password": "testPassword@",
-                "passwordConfirm": "testPassword@",
-                "verified": true
-              }'
-    
+          -d '{"email": "groovy-api-template@fake.com", "password": "testPassword@"}'
