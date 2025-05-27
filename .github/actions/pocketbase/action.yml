@@ -32,3 +32,16 @@ runs:
           echo "Waiting for PocketBase..."
           sleep 2
         done
+
+    - name: Create initial PocketBase user
+      shell: bash
+      run: |
+        curl -X POST http://localhost:8090/api/collections/users/records \
+          -H "Content-Type: application/json" \
+          -d '{
+                "email": "groovy-api-template@fake.com",
+                "password": "testPassword@",
+                "passwordConfirm": "testPassword@",
+                "verified": true
+              }'
+    

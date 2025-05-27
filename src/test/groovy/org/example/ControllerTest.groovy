@@ -1,6 +1,8 @@
 package org.example
 
 import groovy.json.JsonSlurper
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -17,7 +19,8 @@ class ControllerTest extends Specification {
 
     def setup() {
         controller.restTemplate = Mock(RestTemplate)
-        controller.pocketbaseUrl = 'http://127.0.0.1:8090/'
+        controller.pocketbaseUrl = 'http://127.0.0.1:8090'
+        controller.pocketbasePassword = 'testPassword@'
     }
 
     def "should return heartbeat version"() {
@@ -34,16 +37,28 @@ class ControllerTest extends Specification {
         MvcResult result = mockMvc.perform(get("/health-check")).andReturn()
 
         then:
-        1 * controller.restTemplate.getForEntity('http://127.0.0.1:8090/', String)
-                >> { throw exception }
+        1 * controller.restTemplate.postForEntity(*_) >> { throw exception }
         def json = new JsonSlurper().parseText(result.response.contentAsString)
         json.result == expectedResult
         json.integrations.find({ it.name == 'pocketbase' }).result == expectedResult
 
         where:
         expectedResult | exception
-        'success'      | new HttpClientErrorException.NotFound(null, null, null, null)
-        'failure'      | new HttpClientErrorException.BadRequest(null, null, null, null)
         'failure'      | new ConnectException()
+    }
+
+    def 'pocketbase integration health check is success when authenticated'() {
+        when:
+        MvcResult result = mockMvc.perform(get("/health-check")).andReturn()
+
+        then:
+        1 * controller.restTemplate.postForEntity(
+                'http://127.0.0.1:8090/api/collections/users/auth-with-password',
+                { it.body.identity == 'groovy-api-template@fake.com' && it.body.password == 'testPassword@' },
+                Map
+        ) >> new ResponseEntity([token: 'your-auth-token'], HttpStatus.OK)
+        def json = new JsonSlurper().parseText(result.response.contentAsString)
+        json.result == 'success'
+        json.integrations.find({ it.name == 'pocketbase' }).result == 'success'
     }
 }
