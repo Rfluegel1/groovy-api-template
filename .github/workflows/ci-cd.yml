@@ -28,8 +28,6 @@ jobs:
 
       - name: Start PocketBase
         uses: ./.github/actions/pocketbase
-        with:
-          version: '0.21.2'
 
       - name: Build with Gradle
         run: ./gradlew clean build -Denvironment=ci
