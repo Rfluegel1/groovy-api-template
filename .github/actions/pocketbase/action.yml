@@ -3,7 +3,7 @@ description: 'Downloads and starts a PocketBase server for testing'
 inputs:
   version:
     description: 'PocketBase version'
-    default: '0.21.2'
+    default: '0.28.2'
     required: false
 
 runs:
