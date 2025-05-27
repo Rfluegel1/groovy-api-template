@@ -61,11 +61,3 @@ runs:
               }')
         echo "CREATE_USER_JSON: $CREATE_USER_JSON"
         echo "id=$(echo $CREATE_USER_JSON | jq -r '.id')" >> $GITHUB_OUTPUT
-
-    - name: Mark test user as verified
-      shell: bash
-      run: |
-        curl -X PATCH http://localhost:8090/api/collections/users/records/${{ steps.create-user.outputs.id }} \
-          -H "Authorization: Bearer ${{ steps.admin-auth.outputs.token }}" \
-          -H "Content-Type: application/json" \
-          -d '{"verified": true}'
