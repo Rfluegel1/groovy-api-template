@@ -25,8 +25,8 @@ tasks.named("dependencyUpdates") {
 }
 
 dependencies {
-    implementation 'org.apache.groovy:groovy:4.0.26'
-    implementation 'org.apache.groovy:groovy-json:4.0.26'
+    implementation 'org.apache.groovy:groovy:4.0.27'
+    implementation 'org.apache.groovy:groovy-json:4.0.27'
 
     implementation 'org.springframework.boot:spring-boot-starter-web:3.5.0'
 
