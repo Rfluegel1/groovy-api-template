@@ -16,7 +16,7 @@ class HealthCheckFT extends Specification {
     @Autowired
     TestRestTemplate restTemplate
 
-    @IgnoreIf({ System.getProperty('environment') == 'ci' || System.getProperty('environment') == 'staging' })
+    @IgnoreIf({ System.getProperty('environment') == 'staging' })
     def "health check returns app integrations"() {
         when:
         def response = restTemplate.getForEntity("/health-check", Map)
@@ -26,6 +26,6 @@ class HealthCheckFT extends Specification {
 
         response.body.result == 'success'
         response.body.integrations.size() == 1
-        response.body.integrations.find({it.name == 'pocketbase'}).result == 'success'
+        response.body.integrations.find({ it.name == 'pocketbase' }).result == 'success'
     }
 }
