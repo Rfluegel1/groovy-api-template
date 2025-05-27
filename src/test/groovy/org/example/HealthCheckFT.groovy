@@ -16,7 +16,6 @@ class HealthCheckFT extends Specification {
     @Autowired
     TestRestTemplate restTemplate
 
-    @IgnoreIf({ System.getProperty('environment') == 'staging' })
     def "health check returns app integrations"() {
         when:
         def response = restTemplate.getForEntity("/health-check", Map)
