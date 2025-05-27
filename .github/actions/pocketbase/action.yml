@@ -35,35 +35,37 @@ runs:
 
     - name: Create PocketBase admin (superuser)
       shell: bash
-      run: ./pocketbase superuser create groovy-api-template@fake.com testPassword@
+      run: ./pocketbase superuser create admin@fake.com admin
 
     - name: Authenticate as PocketBase admin
       id: admin-auth
       shell: bash
       run: |
-        ADMIN_RESPONSE=$(curl -s -X POST http://localhost:8090/api/admins/auth-with-password \
+        ADMIN_JSON=$(curl -s -X POST http://localhost:8090/api/admins/auth-with-password \
           -H "Content-Type: application/json" \
-          -d '{"email":"groovy-api-template@fake.com","password":"testPassword@"}')
-        echo "token=$(echo $ADMIN_RESPONSE | jq -r '.token')" >> $GITHUB_OUTPUT
+          -d '{"email":"admin@fake.com","password":"admin"}')
+        echo "ADMIN_JSON: $ADMIN_JSON"
+        echo "token=$(echo $ADMIN_JSON | jq -r '.token')" >> $GITHUB_OUTPUT
 
-    - name: Create PocketBase user
-      id: user-create
+    - name: Create test user
+      id: create-user
       shell: bash
       run: |
         CREATE_USER_JSON=$(curl -s -X POST http://localhost:8090/api/collections/users/records \
-          -H "Content-Type: application/json" \
           -H "Authorization: Bearer ${{ steps.admin-auth.outputs.token }}" \
+          -H "Content-Type: application/json" \
           -d '{
-            "email": "test-user@example.com",
-            "password": "userpassword123",
-            "passwordConfirm": "userpassword123"
-          }')
+                "email": "groovy-api-template@fake.com",
+                "password": "testPassword@",
+                "passwordConfirm": "testPassword@"
+              }')
+        echo "CREATE_USER_JSON: $CREATE_USER_JSON"
         echo "id=$(echo $CREATE_USER_JSON | jq -r '.id')" >> $GITHUB_OUTPUT
-        
-    - name: Set PocketBase user as verified
+
+    - name: Mark test user as verified
       shell: bash
       run: |
-        curl -X PATCH http://localhost:8090/api/collections/users/records/${{ steps.user-create.outputs.id }} \
-          -H "Content-Type: application/json" \
+        curl -X PATCH http://localhost:8090/api/collections/users/records/${{ steps.create-user.outputs.id }} \
           -H "Authorization: Bearer ${{ steps.admin-auth.outputs.token }}" \
+          -H "Content-Type: application/json" \
           -d '{"verified": true}'
