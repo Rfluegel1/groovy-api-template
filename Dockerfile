@@ -24,4 +24,4 @@ COPY --from=build /app/build/libs/*.jar app.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "app.jar", "--server.address=0.0.0.0"]
+CMD ["java", "-Denvironment=staging", "-jar", "app.jar", "--server.address=0.0.0.0"]
