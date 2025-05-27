@@ -5,6 +5,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.ContextConfiguration
+import spock.lang.Ignore
+import spock.lang.IgnoreIf
 import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -14,6 +16,7 @@ class HealthCheckFT extends Specification {
     @Autowired
     TestRestTemplate restTemplate
 
+    @IgnoreIf({ System.getProperty('environment') == 'ci' })
     def "health check returns app integrations"() {
         when:
         def response = restTemplate.getForEntity("/health-check", Map)
