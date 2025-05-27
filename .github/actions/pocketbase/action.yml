@@ -35,7 +35,7 @@ runs:
 
     - name: Create PocketBase admin (superuser)
       shell: bash
-      run: ./pocketbase superuser create admin@fake.com admin
+      run: ./pocketbase superuser create admin@fake.com adminPassword
 
     - name: Authenticate as PocketBase admin
       id: admin-auth
@@ -43,7 +43,7 @@ runs:
       run: |
         ADMIN_JSON=$(curl -s -X POST http://localhost:8090/api/admins/auth-with-password \
           -H "Content-Type: application/json" \
-          -d '{"email":"admin@fake.com","password":"admin"}')
+          -d '{"email":"admin@fake.com","password":"adminPassword"}')
         echo "ADMIN_JSON: $ADMIN_JSON"
         echo "token=$(echo $ADMIN_JSON | jq -r '.token')" >> $GITHUB_OUTPUT
 
