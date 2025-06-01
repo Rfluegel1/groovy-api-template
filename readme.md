@@ -1,1 +1,2 @@
 ./gradlew useLatestVersions
+./gradlew release
