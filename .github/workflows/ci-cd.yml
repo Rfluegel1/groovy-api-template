@@ -46,7 +46,7 @@ jobs:
 
       - name: Tag new version
         run: |
-          git fetch --tags --force
+          ./gradlew currentVersion
           ./gradlew release -Prelease.scope=patch
 
       - name: Install Flyctl
