@@ -14,15 +14,6 @@ repositories {
     mavenCentral()
 }
 
-scmVersion {
-    repository {
-        fetchTags = true
-    }
-    tag {
-        prefix = 'v'
-    }
-}
-
 def isNonStable = { String version ->
     def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
     def regex = /^[0-9,.v-]+(-r)?$/
