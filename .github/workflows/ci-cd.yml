@@ -44,6 +44,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Tag new version
+        run: ./gradlew release -Prelease.scope=minor
+
       - name: Install Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
 
