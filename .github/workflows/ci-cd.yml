@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-tags: 'true'
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -45,7 +47,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Tag new version
-        run: ./gradlew release -Prelease.scope=minor
+        run: ./gradlew release -Prelease.scope=patch
 
       - name: Install Flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
