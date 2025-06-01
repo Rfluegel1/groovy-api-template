@@ -19,6 +19,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -43,6 +46,16 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deep-fetch full history (force fix for axion)
+        run: |
+          git fetch --unshallow || true
+          git fetch --tags --force
+
+      - name: Debug Git state
+        run: |
+          git describe --tags --abbrev=0
+          git log --oneline --graph --decorate -n 10
 
       - name: Tag new version
         run: |
