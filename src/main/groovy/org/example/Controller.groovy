@@ -23,9 +23,12 @@ class Controller {
     @Value('${POCKETBASE_ENV_PASSWORD}')
     String pocketbasePassword
 
+    @Value('${app.version}')
+    String appVersion
+
     @GetMapping('/heartbeat')
     Map heartbeat() {
-        return [version: '0.0.0']
+        return [version: appVersion]
     }
 
     @GetMapping('/health-check')
