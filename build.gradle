@@ -14,15 +14,8 @@ repositories {
     mavenCentral()
 }
 
-processResources {
-    filteringCharset = 'UTF-8'
-    filesMatching('**/application.properties') {
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: project.version])
-    }
-}
-
 def isNonStable = { String version ->
-    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUppderCase().contains(it) }
+    def stableKeyword = ['RELEASE', 'FINAL', 'GA'].any { version.toUpperCase().contains(it) }
     def regex = /^[0-9,.v-]+(-r)?$/
     return !stableKeyword && !(version ==~ regex)
 }

@@ -7,10 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.test.context.ContextConfiguration
 import spock.lang.Specification
 
-@SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
-        properties = ["app.version=0.0.0"]
-)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @ContextConfiguration(classes = Application)
 class HeartbeatFT extends Specification {
 

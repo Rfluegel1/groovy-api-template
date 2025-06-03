@@ -18,7 +18,6 @@ class ControllerTest extends Specification {
     MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
 
     def setup() {
-        controller.appVersion = '0.0.0'
         controller.restTemplate = Mock(RestTemplate)
         controller.pocketbaseUrl = 'http://127.0.0.1:8090'
         controller.pocketbasePassword = 'testPassword@'
