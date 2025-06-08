@@ -17,7 +17,7 @@ class Controller {
 
     @GetMapping('/heartbeat')
     Map heartbeat() {
-        return [version: buildProperties?.version ?: 'unknown']
+        return [version: buildProperties?.version?.replace('-SNAPSHOT', '') ?: 'unknown']
     }
 
     @GetMapping('/health-check')

@@ -16,7 +16,7 @@ class ControllerTest extends Specification {
 
     def setup() {
         def mockBuildProperties = Mock(BuildProperties) {
-            getVersion() >> '0.0.0'
+            getVersion() >> '0.0.0-SNAPSHOT'
         }
         controller.buildProperties = mockBuildProperties
         def mockPocketbaseHealthCheck = Mock(PocketbaseHealthCheck) {
@@ -25,7 +25,7 @@ class ControllerTest extends Specification {
         controller.pocketbaseHealthCheck = mockPocketbaseHealthCheck
     }
 
-    def "should return heartbeat version"() {
+    def "displays version without pre-release labels "() {
         when:
         MvcResult result = mockMvc.perform(get("/heartbeat")).andReturn()
 
