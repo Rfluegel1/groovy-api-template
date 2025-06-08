@@ -2,6 +2,7 @@ package org.example
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.info.BuildProperties
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -23,9 +24,12 @@ class Controller {
     @Value('${POCKETBASE_ENV_PASSWORD}')
     String pocketbasePassword
 
+    @Autowired(required = false)
+    BuildProperties buildProperties
+
     @GetMapping('/heartbeat')
     Map heartbeat() {
-        return [version: '0.0.0']
+        return [version: buildProperties?.version ?: 'unknown']
     }
 
     @GetMapping('/health-check')

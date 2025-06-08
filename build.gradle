@@ -8,10 +8,17 @@ plugins {
 
 version = scmVersion.version
 group = 'org.example'
-version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+springBoot {
+    buildInfo {
+        properties {
+            version = project.version
+        }
+    }
 }
 
 def isNonStable = { String version ->
@@ -101,3 +108,8 @@ tasks.register('loadTest') {
         }
     }
 }
+
+tasks.named("processResources") {
+    dependsOn("bootBuildInfo")
+}
+

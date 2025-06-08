@@ -1,6 +1,7 @@
 package org.example
 
 import groovy.json.JsonSlurper
+import org.springframework.boot.info.BuildProperties
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.test.web.servlet.MockMvc
@@ -21,6 +22,10 @@ class ControllerTest extends Specification {
         controller.restTemplate = Mock(RestTemplate)
         controller.pocketbaseUrl = 'http://127.0.0.1:8090'
         controller.pocketbasePassword = 'testPassword@'
+        def mockBuildProperties = Mock(BuildProperties) {
+            getVersion() >> '0.0.0'
+        }
+        controller.buildProperties = mockBuildProperties
     }
 
     def "should return heartbeat version"() {
