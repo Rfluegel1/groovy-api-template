@@ -1,31 +1,19 @@
 package org.example
 
+import jakarta.annotation.Resource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.info.BuildProperties
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.RestTemplate
 
 @RestController
 class Controller {
 
-    @Autowired
-    RestTemplate restTemplate
-
-    @Value('${pocketbase-base-url}')
-    String pocketbaseUrl
-
-    @Value('${POCKETBASE_ENV_PASSWORD}')
-    String pocketbasePassword
-
     @Autowired(required = false)
     BuildProperties buildProperties
+
+    @Resource
+    PocketbaseHealthCheck pocketbaseHealthCheck
 
     @GetMapping('/heartbeat')
     Map heartbeat() {
@@ -34,40 +22,14 @@ class Controller {
 
     @GetMapping('/health-check')
     Map healthCheck() {
-        def result = 'failure'
-        def message = ''
-        try {
-            def headers = new HttpHeaders()
-            headers.setContentType(MediaType.APPLICATION_JSON)
-
-            def body = [
-                    identity: 'groovy-api-template@fake.com',
-                    password: pocketbasePassword
-            ]
-
-            def request = new HttpEntity<>(body, headers)
-
-            def response = restTemplate.postForEntity(
-                    "${pocketbaseUrl}/api/collections/users/auth-with-password",
-                    request,
-                    Map.class
-            )
-
-            println(response)
-            if (response.body.token) {
-                result = 'success'
-            }
-        } catch (Exception ignored) {
-            println(ignored)
-            message = ignored.message
-        }
+        def pocketbaseCheck = pocketbaseHealthCheck.check()
         return [
-                result      : result,
+                result      : pocketbaseCheck.status,
                 integrations: [
                         [
-                                name  : 'pocketbase',
-                                result: result,
-                                message: message
+                                name  : pocketbaseCheck.name,
+                                result: pocketbaseCheck.status,
+                                message: pocketbaseCheck.message
                         ]
                 ]
         ]

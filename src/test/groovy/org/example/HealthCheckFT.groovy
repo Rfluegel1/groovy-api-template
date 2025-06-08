@@ -22,7 +22,7 @@ class HealthCheckFT extends Specification {
 
         then:
         response.statusCode == HttpStatus.OK
-        response.body.result == 'success'
-        response.body.integrations.find({ it.name == 'pocketbase' }).result == 'success'
+        response.body.result == 'SUCCESS'
+        response.body.integrations.find({ it.name == 'Pocketbase' }).result == 'SUCCESS'
     }
 }

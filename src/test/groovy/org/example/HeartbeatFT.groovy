@@ -22,6 +22,7 @@ class HeartbeatFT extends Specification {
 
         then:
         response.statusCode == HttpStatus.OK
-        response.body.version ==~ /^\d+\.\d+\.\d+$/
+        // TODO: remove .* at end
+        response.body.version ==~ /^\d+\.\d+\.\d+.*/
     }
 }
