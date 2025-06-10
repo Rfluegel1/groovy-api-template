@@ -9,29 +9,16 @@ import spock.lang.Specification
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 
-class ControllerTest extends Specification {
-    def controller = new Controller()
+class HealthCheckControllerTest extends Specification {
+    def controller = new HealthCheckController()
 
     MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build()
 
     def setup() {
-        def mockBuildProperties = Mock(BuildProperties) {
-            getVersion() >> '0.0.0-SNAPSHOT'
-        }
-        controller.buildProperties = mockBuildProperties
         def mockPocketbaseHealthCheck = Mock(PocketbaseHealthCheck) {
             check() >> [name: 'pocketbase', status: 'SUCCESS', message: '']
         }
         controller.pocketbaseHealthCheck = mockPocketbaseHealthCheck
-    }
-
-    def "displays version without pre-release labels "() {
-        when:
-        MvcResult result = mockMvc.perform(get("/heartbeat")).andReturn()
-
-        then:
-        def json = new JsonSlurper().parseText(result.response.contentAsString)
-        json.version == '0.0.0'
     }
 
     def 'calls for pocketbase healthcheck'() {
