@@ -16,8 +16,8 @@ class HealthCheckController {
                 result      : pocketbaseCheck.status,
                 integrations: [
                         [
-                                name  : pocketbaseCheck.name,
-                                result: pocketbaseCheck.status,
+                                name   : pocketbaseCheck.name,
+                                result : pocketbaseCheck.status,
                                 message: pocketbaseCheck.message
                         ]
                 ]

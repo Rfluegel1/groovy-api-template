@@ -14,7 +14,7 @@ class PocketbaseHealthCheck {
     @Resource
     RestTemplate restTemplate
 
-    @Value('${pocketbase-base-url}')
+    @Value('${pocketbase.base.url}')
     String pocketbaseUrl
 
     @Value('${POCKETBASE_ENV_PASSWORD}')

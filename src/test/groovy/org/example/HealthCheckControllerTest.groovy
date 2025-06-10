@@ -1,7 +1,6 @@
 package org.example
 
 import groovy.json.JsonSlurper
-import org.springframework.boot.info.BuildProperties
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.setup.MockMvcBuilders

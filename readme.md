@@ -16,7 +16,7 @@
 - `brew install k6`
 - Use latest version of Groovy 4.x.x if prompted
 - Pocketbase is run separately (see [universal-pocketbase-api](https://github.com/Rfluegel1/universal-pocketbase-api))
-- Set `pocketbase-base-url` and `POCKETBASE_ENV_PASSWORD` appropriately
+- Set `pocketbase.base.url` and `POCKETBASE_ENV_PASSWORD` appropriately
 - Run all behavioral tests `./gradlew clean build`
 - Run all performance tests `./gradlew loadTest`
 - Run the app `./gradlew bootRun`
@@ -53,7 +53,7 @@ GitHub Actions is configured to:
 ## Environment Variables
 The application relies on the following environment variables:
 - `base.url` The url that the application will be reachable by
-- `pocketbase-base-url` The url which the pocketbase instance will be reachable by
+- `pocketbase.base.url` The url which the pocketbase instance will be reachable by
 - `POCKETBASE_ENV_PASSWORD` The pocketbase password (assumes that fly env will use secret)
 ---
 ## Notes
