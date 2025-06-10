@@ -20,15 +20,20 @@ class PocketbaseHealthCheck {
     @Value('${POCKETBASE_ENV_PASSWORD}')
     String pocketbasePassword
 
-    Map check() {
-        def status = 'FAILURE'
-        def message = 'Pocketbase failed to provide expected JWT'
+    final String SUCCESS = 'SUCCESS'
+    final String FAILURE = 'FAILURE'
+    final String NAME = 'Pocketbase'
+    final String IDENTITY = 'groovy-api-template@fake.com'
+    final String FAILURE_MESSAGE = 'Pocketbase failed to provide expected JWT'
 
+    Map check() {
+        def status = FAILURE
+        def message = FAILURE_MESSAGE
         def headers = new HttpHeaders()
         headers.setContentType(MediaType.APPLICATION_JSON)
 
         def body = [
-                identity: 'groovy-api-template@fake.com',
+                identity: IDENTITY,
                 password: pocketbasePassword
         ]
 
@@ -42,7 +47,7 @@ class PocketbaseHealthCheck {
             )
 
             if (response.body.token) {
-                status = 'SUCCESS'
+                status = SUCCESS
                 message = ''
             }
         } catch (Exception e) {
@@ -50,7 +55,7 @@ class PocketbaseHealthCheck {
         }
 
         return [
-                name   : 'Pocketbase',
+                name   : NAME,
                 status : status,
                 message: message
         ]
