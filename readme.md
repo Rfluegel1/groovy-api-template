@@ -21,6 +21,13 @@
 - Run all performance tests `./gradlew loadTest`
 - Run the app `./gradlew bootRun`
 ---
+## Testing
+- Run all tests with `./gradlew clean build` or `./gradlew test` with optional environment `./gradlew test -Denvironment=local`
+- .http files can be used for manual testing in IntelliJ
+- Performance testing is supported via k6 `./gradlew loadTest`
+- Functional tests (FTs) will test API E2E `./gradlew test --tests '*FT'`
+- Unit tests will test classes with mocks when necessary `./gradlew test --tests '*Test'`
+---
 ## Versioning
 Versioning is managed by the Axion Release Plugin.
 - Manged by GHA, so manual intervention should not be required
@@ -39,24 +46,18 @@ GitHub Actions is configured to:
 - Deploy using Fly.io with a valid fly.toml configuration. 
 - Example command: `fly deploy`
 ---
-## Testing
-- Run all tests with `./gradlew clean build` or `./gradlew test` with optional environment `./gradlew test -Denvironment=local`
-- .http files can be used for manual testing in IntelliJ
-- Performance testing is supported via k6 `./gradlew loadTest`
-- Functional tests (FTs) will test API E2E
-- Unit tests will test classes with mocks when necessary
----
 ## Dependency Updates
 - Manged by GHA, so manual intervention should not be required
 - To check for updates: `./gradlew dependencyUpdates`
 ---
 ## Environment Variables
 The application relies on the following environment variables:
-- `POCKETBASE_URL` – URL of the PocketBase instance to check during `/health-check`
+- `base.url` The url that the application will be reachable by
+- `pocketbase-base-url` The url which the pocketbase instance will be reachable by
+- `POCKETBASE_ENV_PASSWORD` The pocketbase password (assumes that fly env will use secret)
 ---
 ## Notes
 - Versions during development will appear as `x.y.z-SNAPSHOT`, but the `/heartbeat` endpoint will automatically strip the `-SNAPSHOT` suffix for cleaner output.
-- Version tagging and release should be done via `./gradlew release`, typically triggered in CI/CD.
 ---
 ## Author
 **Reid Fluegel**  
@@ -65,5 +66,3 @@ The application relies on the following environment variables:
 ---
 ## License
 This project is licensed under the [MIT License](LICENSE).
-
-
