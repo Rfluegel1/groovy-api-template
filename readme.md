@@ -11,20 +11,28 @@
 - Supports `.http` files for API testing
 ---
 ## Setup
-- Run the app locally with `./gradlew clean build bootRun`
-- Pocketbase is run separately
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
+- `brew install k6`
+- Use latest version of Groovy 4.x.x if prompted
+- Pocketbase is run separately (see [universal-pocketbase-api](https://github.com/Rfluegel1/universal-pocketbase-api))
+- Set `pocketbase-base-url` and `POCKETBASE_ENV_PASSWORD` appropriately
+- Run all behavioral tests `./gradlew clean build`
+- Run all performance tests `./gradlew loadTest`
+- Run the app `./gradlew bootRun`
 ---
 ## Versioning
 Versioning is managed by the Axion Release Plugin.
 - Manged by GHA, so manual intervention should not be required
 - `./gradlew currentVersion` to print the current version
 - `./gradlew release` to tag and release a new version
-Snapshot versions like `0.1.4-SNAPSHOT` are automatically stripped in the `/heartbeat` response.
 ---
 ## CI/CD
 GitHub Actions is configured to:
-- Run tests and validate builds on pull requests
+- Run tests and validate builds on merges to main
 - Create a new tag and use that as the version
+- Deploys to staging env on successful ci build
+- Automatically runs FTs against staging env after deploy
 ---
 ## Deployment
 - Manged by GHA, so manual intervention should not be required
@@ -39,9 +47,7 @@ GitHub Actions is configured to:
 - Unit tests will test classes with mocks when necessary
 ---
 ## Dependency Updates
-Dependency update plugins:
-- com.github.ben-manes.versions
-- se.patrikerdes.use-latest-versions
+- Manged by GHA, so manual intervention should not be required
 - To check for updates: `./gradlew dependencyUpdates`
 ---
 ## Environment Variables
@@ -53,15 +59,11 @@ The application relies on the following environment variables:
 - Version tagging and release should be done via `./gradlew release`, typically triggered in CI/CD.
 ---
 ## Author
-Replace this section with your name or organization, and optionally link to your GitHub or personal website.
-Example:
-**John Doe**  
+**Reid Fluegel**  
 [github.com/Rfluegel1](https://github.com/Rfluegel1)  
 [reidfluegel.fly.dev](https://reidfluegel.fly.dev/)
 ---
 ## License
-Specify your license here (e.g., MIT, Apache 2.0).
-Example:
 This project is licensed under the [MIT License](LICENSE).
 
 
