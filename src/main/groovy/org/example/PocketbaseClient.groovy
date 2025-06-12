@@ -5,11 +5,12 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
+import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
+@Component
 class PocketbaseClient {
-    @Resource
-    RestTemplate restTemplate
+    final String IDENTITY = 'groovy-api-template@fake.com'
 
     @Value('${pocketbase.base.url}')
     String pocketbaseUrl
@@ -17,7 +18,8 @@ class PocketbaseClient {
     @Value('${POCKETBASE_ENV_PASSWORD}')
     String pocketbasePassword
 
-    final String IDENTITY = 'groovy-api-template@fake.com'
+    @Resource
+    RestTemplate restTemplate
 
     Object authWithPassword() {
         def headers = new HttpHeaders()
